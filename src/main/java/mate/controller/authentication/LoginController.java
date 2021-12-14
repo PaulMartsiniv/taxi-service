@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import mate.exception.AuthenticationException;
 import mate.lib.Injector;
 import mate.model.Driver;
@@ -14,8 +16,9 @@ import mate.service.AuthenticationService;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
-    private static final String DRIVER_ID = "driver_id";
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
     private static final Injector injector = Injector.getInstance("mate");
+    private static final String DRIVER_ID = "driver_id";
     private final AuthenticationService authService
             = (AuthenticationService) injector.getInstance(AuthenticationService.class);
 
@@ -36,6 +39,7 @@ public class LoginController extends HttpServlet {
             session.setAttribute(DRIVER_ID, driver.getId());
             resp.sendRedirect("/");
         } catch (AuthenticationException e) {
+            logger.error("Can't login. Login: {}, Password: wrong", login, e);
             req.setAttribute("errorMsg", e.getMessage());
             req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
         }

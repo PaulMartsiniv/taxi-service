@@ -6,7 +6,7 @@
 <head>
     <title>You profile</title>
 </head>
-<body>
+<body border="1" class="table_dark">
 <h1 class="table_dark">My cars:</h1>
 <table class="table_dark">
 </table>

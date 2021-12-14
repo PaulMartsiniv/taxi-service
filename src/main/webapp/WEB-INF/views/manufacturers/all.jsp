@@ -7,8 +7,13 @@
 <head>
     <title>All manufacturers</title>
 </head>
-<body>
+<body border="1" class="table_dark">
 <jsp:include page="/WEB-INF/views/header.jsp"></jsp:include>
+<button style="color: aliceblue;font-size: 20px; background-color: dimgray;border: none" type="submit">
+    <a style="text-decoration: none; color: whitesmoke" href="${pageContext.request.contextPath}/manufacturers/add">
+        Create new Manufacturer
+    </a>
+</button>
 <h1 class="table_dark">All manufacturers:</h1>
 <table border="1" class="table_dark">
     <tr>

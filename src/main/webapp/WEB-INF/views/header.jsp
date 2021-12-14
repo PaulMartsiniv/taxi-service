@@ -3,7 +3,7 @@
 <head>
     <title>Header</title>
 </head>
-<body>
+<body border="1" class="table_dark">
     <button style="color: aliceblue;font-size: 20px; background-color: dimgray;border: none" type="submit">
         <a style="text-decoration: none; color: whitesmoke" href="${pageContext.request.contextPath}/logout">
             Log out

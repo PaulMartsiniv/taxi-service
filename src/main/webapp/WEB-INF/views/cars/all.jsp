@@ -9,6 +9,16 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp"></jsp:include>
+<button style="color: aliceblue;font-size: 20px; background-color: dimgray;border: none" type="submit">
+    <a style="text-decoration: none; color: whitesmoke" href="${pageContext.request.contextPath}/cars/add">
+        Create new Car
+    </a>
+</button>
+<button style="color: aliceblue;font-size: 20px; background-color: dimgray;border: none" type="submit">
+    <a style="text-decoration: none; color: whitesmoke" href="${pageContext.request.contextPath}/cars/drivers/add">
+        Add Driver to Car
+    </a>
+</button>
 <h1 class="table_dark">All cars:</h1>
 <table border="1" class="table_dark">
     <tr>
