@@ -22,23 +22,23 @@
     </tr>
     <tr>
         <td>
-            <input type="text" name="name" form="driver" required>
+            <input style="height: 25px; width: 100px;" type="text" name="name" form="driver" required>
         </td>
         <td>
-            <input type="text" name="license_number" form="driver" required>
+            <input style="height: 25px; width: 100px;" type="text" name="license_number" form="driver" required>
         </td>
         <td>
-            <input type="login" name="login" form="driver" required>
+            <input style="height: 25px; width: 100px;" type="login" name="login" form="driver" required>
         </td>
         <td>
-            <input type="password" name="password" form="driver" required>
+            <input style="height: 25px; width: 100px;" type="password" name="password" form="driver" required>
         </td>
         <td>
-            <input type="password" name="repeat_password" form="driver" required>
+            <input style="height: 25px; width: 100px;" type="password" name="repeat_password" form="driver" required>
         </td>
         <h4 style="text-align: center; color: red">${errorMsg}</h4>
         <td>
-            <input type="submit" name="add" form="driver">
+            <input style="height: 25px; width: 100px;" type="submit" name="add" form="driver">
         </td>
     </tr>
 </table>
