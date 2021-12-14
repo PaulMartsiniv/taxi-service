@@ -1,6 +1,7 @@
 ![image](src/main/resources/image/taxi-service.png)
-###This web app designed to simulate simple taxi service app.
-####Using this app you can:
+
+### This web app designed to simulate simple taxi service app.
+#### Using this app you can:
 * track all available cars and working drivers
 * register new drivers
 * add new cars and their manufacturers
@@ -26,7 +27,7 @@ Project based on famous 3-layered architecture:
 * Maven Checkstyle Plugin
 
 ### The next DB diagram shows relations between Car, Driver, and Manufacturer.
-![car_diagram_db_2_4f50942103](src/main/resources/image/shema_image.png)
+![car_diagram_db_2_4f50942103](src/main/resources/image/shema_image1.png)
 
 ## Run Project
 Tools to run this project
@@ -41,7 +42,7 @@ Tools to run this project
 - In src/main/java/taxi/util/ConnectionUtil change URL, USERNAME and PASSWORD with your data
 
 ![Utils_properties.png](src/main/resources/image/Utils_properties1.png)
-######For example
+###### For example
 ![2021-07-28 (11)](src/main/resources/image/Utils_properties2.png)
 
 jdbc.Driver is already provided, but you can change it with more suitable as well
