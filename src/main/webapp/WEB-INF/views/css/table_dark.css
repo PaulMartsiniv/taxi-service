@@ -6,7 +6,7 @@
     text-align: center;
     border-collapse: collapse;
     background: whitesmoke;
-    margin: auto;
+    margin: 0 auto;
 }
 .table_dark th {
     color: dimgray;
@@ -30,4 +30,28 @@
 .table_dark tr:hover td {
     text-decoration: underline;
 }
-a:hover color
+input {
+    font-size: 15px;
+    height: 45px;
+    width: 300px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.top {
+    margin-top: 25vh;
+}
+button {
+    min-height: 35px;
+    min-width: 200px;
+    color: aliceblue;
+    font-size: 20px;
+    background-color: dimgray;
+    border: none;
+}
+a {
+    text-decoration: none;
+    color: whitesmoke;
+}
+a:hover {
+    text-decoration: underline;
+}
