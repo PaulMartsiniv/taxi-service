@@ -1,14 +1,14 @@
 package mate.service.impl;
 
 import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import mate.exception.AuthenticationException;
 import mate.lib.Inject;
 import mate.lib.Service;
 import mate.model.Driver;
 import mate.service.AuthenticationService;
 import mate.service.DriverService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
