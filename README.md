@@ -22,7 +22,6 @@ Project based on famous 3-layered architecture:
 * JSP
 * JSTL
 * Maven
-* Maven Checkstyle Plugin
 * MySQL (v8.0.25)
 * Servlet
 
