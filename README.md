@@ -26,13 +26,11 @@ Project based on famous 3-layered architecture:
 * MySQL (v8.0.25)
 * Servlet
 
-### The next DB diagram shows relations between Car, Driver, and Manufacturer.
-![car_diagram_db_2_4f50942103](src/main/resources/image/shema_image.png)
 
 ## Run Project
 Tools to run this project
 - [x] IntelliJ IDEA Ultimate [IDEA](https://www.jetbrains.com/idea/download/#section=mac)
-- [x] ApacheTomcat [TOMCAT](https://tomcat.apache.org/download-90.cgi)
+- [x] ApacheTomcat [Tomcat](https://tomcat.apache.org/download-90.cgi)
 - [x] MySQL and MySQL Workbench [MySQL](https://www.mysql.com/downloads/)
 - [x] Clone the project on your IDE
 - [x] In MySQL Workbench run the script from resources/init_db.sql.
