@@ -12,7 +12,7 @@ import taxi.lib.Injector;
 import taxi.model.Car;
 import taxi.service.CarService;
 
-@WebServlet("/cars/profile/")
+@WebServlet("/cars/profile/all")
 public class GetMyCurrentCarsController extends HttpServlet {
     private static final String DRIVER_ID = "driver_id";
     private static final Injector injector = Injector.getInstance("taxi");
