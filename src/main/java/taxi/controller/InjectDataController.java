@@ -79,5 +79,4 @@ public class InjectDataController extends HttpServlet {
         req.setAttribute("cars", cars);
         resp.sendRedirect("/");
     }
-
 }
