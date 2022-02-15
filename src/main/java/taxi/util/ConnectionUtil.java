@@ -10,7 +10,7 @@ public class ConnectionUtil {
             = "YOUR_URL";
     private static final String USERNAME = "YOUR_USERNAME";
     private static final String PASSWORD = "YOUR_PASSWORD";
-    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String JDBC_DRIVER = "org.postgresql.Driver";
 
     static {
         try {

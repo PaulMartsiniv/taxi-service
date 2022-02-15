@@ -24,16 +24,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car create(Car car) {
-        String insertQuery = "INSERT INTO cars (model, manufacturer_id)"
+        String query = "INSERT INTO taxi.cars (model, manufacturer_id)"
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement createCarStatement =
-                        connection.prepareStatement(
-                             insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-            createCarStatement.setString(1, car.getModel());
-            createCarStatement.setLong(2, car.getManufacturer().getId());
-            createCarStatement.executeUpdate();
-            ResultSet resultSet = createCarStatement.getGeneratedKeys();
+                PreparedStatement statement = connection.prepareStatement(query,
+                        Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, car.getModel());
+            statement.setLong(2, car.getManufacturer().getId());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
@@ -46,20 +45,16 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectQuery = "SELECT c.id as id, "
-                + "model, "
-                + "manufacturer_id, "
-                + "m.name as manufacturer_name, "
-                + "m.country as manufacturer_country "
-                + "FROM cars c"
-                + " JOIN manufacturers m on c.manufacturer_id = m.id"
-                + " where c.id = ? AND c.is_deleted = false";
+        String query = "SELECT c.id AS id, model, manufacturer_id, "
+                + "m.name AS manufacturer_name, m.country AS manufacturer_country "
+                + "FROM taxi.cars AS c"
+                + " JOIN taxi.manufacturers AS m ON c.manufacturer_id = m.id"
+                + " where c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getCarStatement =
-                        connection.prepareStatement(selectQuery)) {
-            getCarStatement.setLong(1, id);
-            ResultSet resultSet = getCarStatement.executeQuery();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 car = parseCarFromResultSet(resultSet);
             }
@@ -74,19 +69,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String selectQuery = "SELECT c.id as id, "
-                + "model, "
-                + "manufacturer_id, "
-                + "m.name as manufacturer_name, "
-                + "m.country as manufacturer_country "
-                + "FROM cars c"
-                + " JOIN manufacturers m on c.manufacturer_id = m.id"
-                + " where c.is_deleted = false";
+        String query = "SELECT c.id AS id, model, manufacturer_id, "
+                + "m.name AS manufacturer_name, m.country AS manufacturer_country "
+                + "FROM taxi.cars AS c "
+                + "INNER JOIN taxi.manufacturers AS m ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getAllCarsStatement =
-                        connection.prepareStatement(selectQuery)) {
-            ResultSet resultSet = getAllCarsStatement.executeQuery();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));
             }
@@ -99,15 +90,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String selectQuery = "UPDATE cars SET model = ?, manufacturer_id = ? WHERE id = ?"
+        String query = "UPDATE taxi.cars SET model = ?, manufacturer_id = ? WHERE id = ?"
                 + " and is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement updateCarStatement =
-                        connection.prepareStatement(selectQuery)) {
-            updateCarStatement.setString(1, car.getModel());
-            updateCarStatement.setLong(2, car.getManufacturer().getId());
-            updateCarStatement.setLong(3, car.getId());
-            updateCarStatement.executeUpdate();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, car.getModel());
+            statement.setLong(2, car.getManufacturer().getId());
+            statement.setLong(3, car.getId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car " + car, e);
         }
@@ -118,13 +108,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String selectQuery = "UPDATE cars SET is_deleted = true WHERE id = ?"
+        String query = "UPDATE taxi.cars SET is_deleted = true WHERE id = ?"
                 + " and is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement deleteCarStatement =
-                         connection.prepareStatement(selectQuery)) {
-            deleteCarStatement.setLong(1, id);
-            return deleteCarStatement.executeUpdate() > 0;
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car by id " + id, e);
         }
@@ -132,23 +121,22 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String selectQuery = "SELECT c.id as id, "
+        String query = "SELECT c.id AS id, "
                 + "model, "
                 + "manufacturer_id, "
-                + "m.name as manufacturer_name, "
-                + "m.country as manufacturer_country "
-                + "FROM cars c"
-                + " JOIN manufacturers m on c.manufacturer_id = m.id"
-                + " JOIN cars_drivers cd on c.id = cd.car_id"
-                + " JOIN drivers d on cd.driver_id = d.id"
-                + " where c.is_deleted = false and driver_id = ?"
-                + " and d.is_deleted = false";
+                + "m.name AS manufacturer_name, "
+                + "m.country AS manufacturer_country "
+                + "FROM taxi.cars c "
+                + "JOIN taxi.manufacturers AS m on c.manufacturer_id = m.id "
+                + "JOIN taxi.cars_drivers AS cd on c.id = cd.car_id "
+                + "JOIN taxi.drivers AS d on cd.driver_id = d.id "
+                + "where c.is_deleted = false and cd.driver_id = ? "
+                + "and d.is_deleted = false";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getAllCarsByDriverStatement =
-                        connection.prepareStatement(selectQuery)) {
-            getAllCarsByDriverStatement.setLong(1, driverId);
-            ResultSet resultSet = getAllCarsByDriverStatement.executeQuery();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));
             }
@@ -165,18 +153,17 @@ public class CarDaoImpl implements CarDao {
         if (drivers.size() == 0) {
             return;
         }
-        String insertQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES "
-                + drivers.stream().map(driver -> "(?, ?)").collect(Collectors.joining(", "))
-                + " ON DUPLICATE KEY UPDATE car_id = car_id";
+        String query = "INSERT INTO taxi.cars_drivers (car_id, driver_id) VALUES "
+                + drivers.stream().map(driver -> "(?, ?)")
+                .collect(Collectors.joining(", "));
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement linkDriverToCarStatement =
-                        connection.prepareStatement(insertQuery)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < drivers.size(); i++) {
                 Driver driver = drivers.get(i);
-                linkDriverToCarStatement.setLong((i * SHIFT) + 1, carId);
-                linkDriverToCarStatement.setLong((i * SHIFT) + 2, driver.getId());
+                statement.setLong((i * SHIFT) + 1, carId);
+                statement.setLong((i * SHIFT) + 2, driver.getId());
             }
-            linkDriverToCarStatement.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert drivers " + drivers, e);
         }
@@ -186,34 +173,32 @@ public class CarDaoImpl implements CarDao {
         Long carId = car.getId();
         List<Driver> exceptions = car.getDrivers();
         int size = exceptions.size();
-        String insertQuery = "DELETE FROM cars_drivers WHERE car_id = ? "
+        String query = "DELETE FROM taxi.cars_drivers WHERE car_id = ? "
                 + "AND NOT driver_id IN ("
                 + ZERO_PLACEHOLDER + ", ?".repeat(size)
                 + ");";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteAllDriversExceptLinkedStatement =
-                        connection.prepareStatement(insertQuery)) {
-            deleteAllDriversExceptLinkedStatement.setLong(1, carId);
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, carId);
             for (int i = 0; i < size; i++) {
                 Driver driver = exceptions.get(i);
-                deleteAllDriversExceptLinkedStatement.setLong((i) + SHIFT, driver.getId());
+                statement.setLong((i) + SHIFT, driver.getId());
             }
-            deleteAllDriversExceptLinkedStatement.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete drivers " + exceptions, e);
         }
     }
 
     private List<Driver> getAllDriversByCarId(Long carId) {
-        String selectQuery = "SELECT id, name, license_number, login, password "
-                + "FROM cars_drivers cd "
-                + "JOIN drivers d ON cd.driver_id = d.id "
-                + "WHERE car_id = ? AND is_deleted = FALSE";
+        String query = "SELECT id, name, license_number, login, password "
+                + "FROM taxi.cars_drivers AS cd "
+                + "JOIN taxi.drivers AS d ON cd.driver_id = d.id "
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getDriversByCarIdStatement =
-                        connection.prepareStatement(selectQuery)) {
-            getDriversByCarIdStatement.setLong(1, carId);
-            ResultSet resultSet = getDriversByCarIdStatement.executeQuery();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, carId);
+            ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
                 drivers.add(parseDriverFromResultSet(resultSet));
@@ -225,26 +210,24 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
-        Long driverId = resultSet.getObject("id", Long.class);
-        String name = resultSet.getNString("name");
-        String licenseNumber = resultSet.getNString("license_number");
-        String login = resultSet.getNString("login");
-        String password = resultSet.getNString("password");
-        Driver driver = new Driver(name, licenseNumber, login, password);
-        driver.setId(driverId);
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLogin(resultSet.getString("login"));
+        driver.setPassword(resultSet.getString("password"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
-        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
-        String manufacturerName = resultSet.getNString("manufacturer_name");
-        String manufacturerCountry = resultSet.getNString("manufacturer_country");
-        Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
-        manufacturer.setId(manufacturerId);
-        Long carId = resultSet.getObject("id", Long.class);
-        String model = resultSet.getNString("model");
-        Car car = new Car(model, manufacturer);
-        car.setId(carId);
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setCountry(resultSet.getString("manufacturer_country"));
+        manufacturer.setName(resultSet.getString("manufacturer_name"));
+        Car car = new Car();
+        car.setId(resultSet.getObject("id", Long.class));
+        car.setModel(resultSet.getString("model"));
+        car.setManufacturer(manufacturer);
         return car;
     }
 }
